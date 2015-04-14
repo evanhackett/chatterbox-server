@@ -17,87 +17,88 @@ var requestHandler = function(request, response) {
   console.log("Serving request type " + request.method + " for url " + request.url);
 
   // Verify a proper address
-  if (request.url.slice(-17) !== '/classes/messages') {
-    var statusCode = 404;
-    var headers = defaultCorsHeaders;
-    response.writeHead(statusCode, headers);
-    response.end();
-  }
+  if (request.url.slice(-17) === '/classes/messages') {
+    // var statusCode = 404;
+    // var headers = defaultCorsHeaders;
+    // response.writeHead(statusCode, headers);
+    // response.end();
+  
 
-  //Handle CORS options request
-  if (request.method === 'OPTIONS') {
-    var statusCode = 200;
-    var headers = defaultCorsHeaders;
-    response.writeHead(statusCode, headers);
-    response.end();
-  }
-
-  //Handle GET request
-  if (request.method === 'GET') {
-
-    var statusCode = 200;
-
-    var headers = defaultCorsHeaders;
-
-    headers['Content-Type'] = "application/json";
-
-    response.writeHead(statusCode, headers);
-
-    response.end(JSON.stringify(this.messages));
-
-  } 
-
-  //Handle POST request
-  if (request.method === 'POST') {
-    var statusCode = 201;
-    var headers = defaultCorsHeaders;
-
-     this.incomingMessage = '';
-
-    request.on('data', function(data) {
-      this.incomingMessage += data;
-    }.bind(this));
-    
-
-    request.on('end', function() {
-      this.incomingMessage = JSON.parse(this.incomingMessage);
-      var process = true;
-
-      // check username
-      if (typeof this.incomingMessage['username'] !== 'string') {
-        process = false;
-      } else if (this.incomingMessage['username'].length > 20 && this.incomingMessage['username'].length < 1) {
-        process = false;
-      }
-
-      // check text
-      if (typeof this.incomingMessage['text'] !== 'string') {
-        process = false;
-      } else if (this.incomingMessage['text'].length > 1000 && this.incomingMessage['username'].length < 1) {
-        process = false;
-      }
-
-      // check roomname
-      if (typeof this.incomingMessage['roomname'] !== 'string') {
-        process = false;
-      } else if (this.incomingMessage['roomname'].length > 20 && this.incomingMessage['username'].length < 1) {
-        process = false;
-      }
-
-      if (process) {
-        this.messages.results.unshift(this.incomingMessage);
-        headers['Content-Length'] = '' + JSON.stringify(this.incomingMessage).length;
-        response.writeHead(statusCode, headers);
-        delete headers['Content-Length'];
-
-        // write to file
-        fs.writeFile('messages.json', JSON.stringify(this.messages), "utf8");
-      }
-      
+    //Handle CORS options request
+    if (request.method === 'OPTIONS') {
+      var statusCode = 200;
+      var headers = defaultCorsHeaders;
+      response.writeHead(statusCode, headers);
       response.end();
-    }.bind(this));
+    }
 
-    
+    //Handle GET request
+    if (request.method === 'GET') {
+
+      var statusCode = 200;
+
+      var headers = defaultCorsHeaders;
+
+      headers['Content-Type'] = "application/json";
+
+      response.writeHead(statusCode, headers);
+
+      response.end(JSON.stringify(this.messages));
+
+    } 
+
+    //Handle POST request
+    if (request.method === 'POST') {
+      var statusCode = 201;
+      var headers = defaultCorsHeaders;
+
+       this.incomingMessage = '';
+
+      request.on('data', function(data) {
+        this.incomingMessage += data;
+      }.bind(this));
+      
+
+      request.on('end', function() {
+        this.incomingMessage = JSON.parse(this.incomingMessage);
+        var process = true;
+
+        // check username
+        if (typeof this.incomingMessage['username'] !== 'string') {
+          process = false;
+        } else if (this.incomingMessage['username'].length > 20 && this.incomingMessage['username'].length < 1) {
+          process = false;
+        }
+
+        // check text
+        if (typeof this.incomingMessage['text'] !== 'string') {
+          process = false;
+        } else if (this.incomingMessage['text'].length > 1000 && this.incomingMessage['username'].length < 1) {
+          process = false;
+        }
+
+        // check roomname
+        if (typeof this.incomingMessage['roomname'] !== 'string') {
+          process = false;
+        } else if (this.incomingMessage['roomname'].length > 20 && this.incomingMessage['username'].length < 1) {
+          process = false;
+        }
+
+        if (process) {
+          this.messages.results.unshift(this.incomingMessage);
+          headers['Content-Length'] = '' + JSON.stringify(this.incomingMessage).length;
+          response.writeHead(statusCode, headers);
+          delete headers['Content-Length'];
+
+          // write to file
+          fs.writeFile('messages.json', JSON.stringify(this.messages), "utf8");
+        }
+        
+        response.end();
+      }.bind(this));
+
+      
+    }
   }
 };
 

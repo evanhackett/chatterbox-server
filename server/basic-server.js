@@ -1,6 +1,8 @@
 /* Import node's http module: */
 var http = require("http");
 var handleRequest = require("./request-handler.js");
+var static = require('node-static');
+var folder = new(static.Server)('../client');
 
 // Every server needs to listen on a port with a unique number. The
 // standard port for HTTP servers is port 80, but that port is
@@ -22,7 +24,18 @@ var ip = "127.0.0.1";
 // incoming requests.
 //
 // After creating the server, we will tell it to listen on the given port and IP. */
-var server = http.createServer(handleRequest);
+var server = http.createServer(function (req, res) {
+  handleRequest(req, res);
+  req.addListener('end', function () {
+      folder.serve(req, res);
+  }).resume();
+  // if ( req.method === 'OPTIONS' ) {
+  //   var statusCode = 200;
+  //   var headers = defaultCorsHeaders;
+  //   res.writeHead(statusCode, headers);
+  //   res.end();
+  // }
+}); 
 console.log("Listening on http://" + ip + ":" + port);
 server.listen(port, ip);
 
@@ -39,3 +52,9 @@ server.listen(port, ip);
 // possibility of serving more requests. To stop your server, hit
 // Ctrl-C on the command line.
 
+var defaultCorsHeaders = {
+  "access-control-allow-origin": "*",
+  "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+  "access-control-allow-headers": "content-type, accept",
+  "access-control-max-age": 10 // Seconds.
+};
