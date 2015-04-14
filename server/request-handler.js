@@ -12,8 +12,9 @@ this file and include it in basic-server.js so that it actually works.
 
 **************************************************************/
 
+
 var requestHandler = function(request, response) {
-  var messages = {'results' : [{
+  this.messages = this.messages || {'results' : [{
     'username': 'shawndrost',
     'text': 'trololo',
     'roomname': '4chan'
@@ -33,6 +34,13 @@ var requestHandler = function(request, response) {
   // debugging help, but you should always be careful about leaving stray
   // console.logs in your code.
   console.log("Serving request type " + request.method + " for url " + request.url);
+
+  if (request.url.slice(-17) !== '/classes/messages') {
+    var statusCode = 404;
+    var headers = defaultCorsHeaders;
+    response.writeHead(statusCode, headers);
+    response.end();
+  }
 
   if (request.method === 'GET') {
 
@@ -59,15 +67,26 @@ var requestHandler = function(request, response) {
     //
     // Calling .end "flushes" the response's internal buffer, forcing
     // node to actually send all the data over to the client.
-    // try {
-    //   JSON.parse(JSON.stringify(message));
-    // } 
-    // catch(err) {
-    //   console.log(err);
-    // }
-    // finally{
-    // response.write(JSON.stringify(message));
-    response.end(JSON.stringify(messages));
+    response.end(JSON.stringify(this.messages));
+
+  } else if (request.method === 'POST') {
+    var statusCode = 201;
+    var headers = defaultCorsHeaders;
+
+    this.messages = '';
+
+    request.on('data', function(data) {
+      this.messages += data;
+    }.bind(this));
+    
+    var tmp = this.messages;
+    request.on('end', function() {
+      this.messages = {'results' : [JSON.parse(this.messages)]};
+      response.writeHead(statusCode, headers);
+      response.end();
+    }.bind(this));
+
+    
   }
 };
 
