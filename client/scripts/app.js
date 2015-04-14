@@ -1,6 +1,6 @@
 // YOUR CODE HERE:
 var app = {
-  server : 'https://api.parse.com/1/classes/chatterbox',
+  server : 'http://127.0.0.1:3000/classes/messages',
   rooms : {},
   currentRoom: undefined,
   recentFetch : {},
@@ -26,7 +26,7 @@ app.init = function() {
 app.send = function(message) {
   $.ajax({
     // always use this url
-    url: 'https://api.parse.com/1/classes/chatterbox',
+    url: 'http://127.0.0.1:3000/classes/messages',
     type: 'POST',
     data: message,
     contentType: 'application/json',
@@ -35,16 +35,18 @@ app.send = function(message) {
       console.log('Getting messages...');
       $('#message').val("");
     },
-    error: function (data) {
+    error: function (data, desc) {
       // see: https://developer.mozilla.org/en-US/docs/Web/API/console.error
       console.error('chatterbox: Failed to send message');
+      console.error(desc);
+      console.error(data);
     }
   });
 };
 
 app.fetch = function() {
   $.ajax({
-    url: 'https://api.parse.com/1/classes/chatterbox?order=-createdAt',
+    url: 'http://127.0.0.1:3000/classes/messages',
     type: 'GET',
     contentType: 'application/json',
     success: function(data) {
