@@ -13,6 +13,7 @@
     "chai": "^1.9.0"
   },
   "dependencies": {
+    "node-static": "^0.7.7",
     "underscore": "~1.8.3"
   }
 }

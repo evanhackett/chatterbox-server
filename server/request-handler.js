@@ -4,8 +4,18 @@ fs.readFile('./messages.json', 'utf8', function(err, data) {
   fileContents = data; 
 });
 
+messages = {"results": [
+  {"username": "Jono",
+   "text": "Do my bidding!",
+   "roomname": "room1"},
+
+  {"username":"asdf",
+   "text":"4chan",
+   "roomname":"4chan"}
+]};
+
 var requestHandler = function(request, response) {
-  this.messages = this.messages || JSON.parse(fileContents);
+  this.messages = messages || JSON.parse(fileContents);
 
 
   // {'results' : [{

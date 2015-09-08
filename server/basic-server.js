@@ -2,7 +2,7 @@
 var http = require("http");
 var handleRequest = require("./request-handler.js");
 var static = require('node-static');
-var folder = new(static.Server)('../client');
+var fileServer = new static.Server('../client');
 
 // Every server needs to listen on a port with a unique number. The
 // standard port for HTTP servers is port 80, but that port is
@@ -27,7 +27,7 @@ var ip = "127.0.0.1";
 var server = http.createServer(function (req, res) {
   handleRequest(req, res);
   req.addListener('end', function () {
-      folder.serve(req, res);
+      fileServer.serve(req, res);
   }).resume();
   // if ( req.method === 'OPTIONS' ) {
   //   var statusCode = 200;
