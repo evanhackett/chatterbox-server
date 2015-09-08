@@ -1,4 +1,5 @@
-//YOU DO NOT NEED TO EDIT this code.
+// This file is an example of the config.js file referenced in index.html 
+// The real file has the actual Parse API keys, and will not be committed to git 
 if (!/(&|\?)username=/.test(window.location.search)) {
   var newSearch = window.location.search;
   if (newSearch !== '' & newSearch !== '?') {

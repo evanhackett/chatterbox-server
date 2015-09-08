@@ -1,4 +1,5 @@
-//YOU DO NOT NEED TO EDIT this code.
+// This file is an example of the config.js file referenced in index.html 
+// The real file has the actual Parse API keys, and will not be committed to git 
 if (!/(&|\?)username=/.test(window.location.search)) {
   var newSearch = window.location.search;
   if (newSearch !== '' & newSearch !== '?') {
@@ -10,6 +11,6 @@ if (!/(&|\?)username=/.test(window.location.search)) {
 
 // Put your parse application keys here!
 $.ajaxPrefilter(function (settings, _, jqXHR) {
-  jqXHR.setRequestHeader("X-Parse-Application-Id", "voLazbq9nXuZuos9hsmprUz7JwM2N0asnPnUcI7r");
-  jqXHR.setRequestHeader("X-Parse-REST-API-Key", "QC2F43aSAghM97XidJw8Qiy1NXlpL5LR45rhAVAf");
+  jqXHR.setRequestHeader("X-Parse-Application-Id", "PARSE_APP_ID");
+  jqXHR.setRequestHeader("X-Parse-REST-API-Key", "PARSE_API_KEY");
 });
